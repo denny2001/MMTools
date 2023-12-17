@@ -276,8 +276,8 @@ rmc_idx = (1:num_modes+1:num_modes^2)' + permute((0:num_zSteps-1)*num_modes^2,[1
 D_idx = repmat((idx0 + (0:num_modes-1)*Nt)',1,1,num_zSteps);
 sim.rmc.matrices(rmc_idx) = D_op(D_idx);
 sim.rmc.matrices = permute(sim.rmc.matrices,[1,2,4,3]); % make it (num_modes,num_modes,1,num_zSteps); the 3rd dimension is for the MPA's M-parallelization
-sim.rmc.D = struct('pos', myexpm_( sim.rmc.matrices.*z,[],[],true,false,true),...
-                   'neg', myexpm_(-sim.rmc.matrices.*z,[],[],true,false,true));
+sim.rmc.D = struct('pos', myexpm_( sim.rmc.matrices.*z,[],[],true,false,sim.gpu_yes),...
+                   'neg', myexpm_(-sim.rmc.matrices.*z,[],[],true,false,sim.gpu_yes));
 sim.rmc = rmfield(sim.rmc,'matrices'); % remove unused "matrices" to save some memory
 sim.rmc.D = cell2struct([squeeze(num2cell(sim.rmc.D.pos,[1,2,3])),...
                          squeeze(num2cell(sim.rmc.D.neg,[1,2,3]))],{'pos','neg'},2);
